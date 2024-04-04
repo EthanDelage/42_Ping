@@ -16,6 +16,7 @@ BUILD_DIR	=		.build/
 
 SRC			=		main.c	\
 					validate_params.c	\
+					socket_initialization.c	\
 					options/validate_options.c	\
 					utils/print_params.c	\
 					resolve_host.c

@@ -24,6 +24,7 @@ bool validate_params(int argc, char** argv, ping_params_t* ping_params);
 bool validate_option(int argc, char** argv, int* index,
                      ping_params_t* ping_params);
 
+int init_socket();
 int resolve_host(const char* host, ping_params_t* ping_params);
 
 void print_params(ping_params_t ping_params);
