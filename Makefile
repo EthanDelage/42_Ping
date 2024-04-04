@@ -17,7 +17,9 @@ BUILD_DIR	=		.build/
 SRC			=		main.c	\
 					validate_params.c	\
 					options/validate_options.c	\
-					utils/print_params.c
+					utils/print_params.c	\
+					resolve_host.c
+
 
 OBJ			=		$(addprefix $(BUILD_DIR), $(SRC:.c=.o))
 

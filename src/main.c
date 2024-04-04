@@ -12,7 +12,11 @@ int main(int argc, char** argv) {
     bzero(&ping_params, sizeof(ping_params_t));
     if (validate_params(argc, argv, &ping_params) == false) {
         dprintf(STDERR_FILENO, USAGE_MESSAGE);
-        return 64;
+        return 1;
+    }
+    if (resolve_host(ping_params.host, &ping_params) != 0) {
+        close(sock_fd);
+        return 1;
     }
     print_params(ping_params);
     return 0;

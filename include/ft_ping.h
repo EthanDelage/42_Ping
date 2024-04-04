@@ -4,6 +4,7 @@
 #define FT_PING_H_
 
 #include <stdbool.h>
+#include <netinet/in.h>
 
 #define OPTIONS_WITHOUT_ARG "v"
 #define OPTIONS_WITH_ARG    ""
@@ -14,12 +15,16 @@
 
 typedef struct ping_params_s {
     char*   host;
+    char*   ip;
+    struct sockaddr_in sock_addr;
     bool    verbose;
 } ping_params_t;
 
 bool validate_params(int argc, char** argv, ping_params_t* ping_params);
 bool validate_option(int argc, char** argv, int* index,
                      ping_params_t* ping_params);
+
+int resolve_host(const char* host, ping_params_t* ping_params);
 
 void print_params(ping_params_t ping_params);
 
