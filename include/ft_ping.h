@@ -6,6 +6,24 @@
 #include <stdbool.h>
 #include <netinet/in.h>
 
+#ifdef __APPLE__
+
+struct icmphdr
+{
+    u_int8_t type;                /* message type */
+    u_int8_t code;                /* type sub-code */
+    u_int16_t checksum;
+    union
+    {
+        struct
+        {
+            u_int16_t        id;
+            u_int16_t        sequence;
+        } echo;                        /* echo datagram */
+    } un;
+};
+#endif
+
 #define OPTIONS_WITHOUT_ARG "v"
 #define OPTIONS_WITH_ARG    ""
 
