@@ -19,7 +19,8 @@ SRC			=		main.c	\
 					socket_initialization.c	\
 					options/validate_options.c	\
 					utils/print_params.c	\
-					resolve_host.c
+					resolve_host.c	\
+					icmp_msg.c
 
 
 OBJ			=		$(addprefix $(BUILD_DIR), $(SRC:.c=.o))

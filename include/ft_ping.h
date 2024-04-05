@@ -27,6 +27,8 @@ bool validate_option(int argc, char** argv, int* index,
 int init_socket();
 int resolve_host(const char* host, ping_params_t* ping_params);
 
+char* get_ping_message(size_t packet_size);
+
 void print_params(ping_params_t ping_params);
 
 #endif //FT_PING_H_
