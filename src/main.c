@@ -26,6 +26,9 @@ int main(int argc, char** argv) {
     if (sock_fd < 0) {
         return errno;
     }
+    if (icmp_ping(sock_fd, &ping_params) != 0) {
+        return errno;
+    }
     close(sock_fd);
     return 0;
 }

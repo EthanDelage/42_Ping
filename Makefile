@@ -20,7 +20,8 @@ SRC			=		main.c	\
 					options/validate_options.c	\
 					utils/print_params.c	\
 					resolve_host.c	\
-					icmp_msg.c
+					icmp_msg.c	\
+					icmp_ping.c
 
 
 OBJ			=		$(addprefix $(BUILD_DIR), $(SRC:.c=.o))
