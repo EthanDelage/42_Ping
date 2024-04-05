@@ -1,5 +1,7 @@
 //  Copyright (c) 2024 Ethan Delage
 
+#include <errno.h>
+#include <stdio.h>
 #include <stdlib.h>
 #include <string.h>
 #include <unistd.h>
@@ -13,6 +15,10 @@ char* get_ping_message(size_t packet_size) {
     char* msg;
 
     msg = calloc(1, sizeof(struct icmp) + packet_size);
+    if (msg == NULL) {
+        dprintf(STDERR_FILENO, "ping: %s\n", strerror(errno));
+        return NULL;
+    }
     icmp_header = (struct icmp*) msg;
     *icmp_header = get_icmp_header(ICMP_ECHO);
     icmp_header->icmp_cksum = get_checksum(msg, sizeof(struct icmp) + packet_size);
