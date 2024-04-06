@@ -8,21 +8,25 @@
 
 #include "ft_ping.h"
 
-static int send_ping(int sock_fd, ping_params_t* ping_params);
+static ssize_t send_ping(int sock_fd, ping_params_t* ping_params);
 static char* receive_ping(int sock_fd, ping_params_t* ping_params);
 
 int icmp_ping(int sock_fd, ping_params_t* ping_params) {
+    ssize_t ret;
     char* reply_packet;
     struct icmphdr* icmp_header;
 
-    if (send_ping(sock_fd, ping_params) != 0) {
+    ret = send_ping(sock_fd, ping_params);
+    if (ret > 0) {
         return -1;
     }
     reply_packet = receive_ping(sock_fd, ping_params);
     if (reply_packet == NULL) {
+        if (errno == EAGAIN)
+            return 0;
         return -1;
     }
-    icmp_header = (struct icmphdr*) (reply_packet+ 20);
+    icmp_header = (struct icmphdr*) (reply_packet + sizeof(iphdr_t));
     // TODO: remove print
     printf("type: %d, code: %d, seq: %d, id: %d\n", icmp_header->type,
            icmp_header->code, icmp_header->un.echo.sequence,
@@ -32,7 +36,7 @@ int icmp_ping(int sock_fd, ping_params_t* ping_params) {
     return 0;
 }
 
-static int send_ping(int sock_fd, ping_params_t* ping_params) {
+static ssize_t send_ping(int sock_fd, ping_params_t* ping_params) {
     char* ping_message;
     ssize_t message_len;
     ssize_t ret;
@@ -47,8 +51,8 @@ static int send_ping(int sock_fd, ping_params_t* ping_params) {
                  sizeof(struct sockaddr_in));
     free(ping_message);
     if (ret != message_len) {
-        dprintf(STDERR_FILENO, "ping: %s\n", strerror(errno));
-        return -1;
+        dprintf(STDERR_FILENO, "ping: sendto: %s\n", strerror(errno));
+        return ret;
     }
     return 0;
 }
@@ -70,7 +74,11 @@ static char* receive_ping(int sock_fd, ping_params_t* ping_params) {
     ret = recvfrom(sock_fd, buffer, message_len, 0,
                    (struct sockaddr*) &ping_params->sock_addr, &addr_len);
     if (ret <= 0) {
-        dprintf(STDERR_FILENO, "ping: %s\n", strerror(errno));
+        if (errno == EAGAIN) {
+            printf("Request timeout for icmp_seq %d\n", ping_params->seq);
+        } else {
+            dprintf(STDERR_FILENO, "ping: %s\n", strerror(errno));
+        }
         free(buffer);
         return NULL;
     }
