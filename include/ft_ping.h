@@ -50,6 +50,7 @@ typedef struct ping_params_s {
     struct sockaddr_in sock_addr;
     bool    verbose;
     size_t  packet_size;
+    u_int16_t seq;
 } ping_params_t;
 
 bool validate_params(int argc, char** argv, ping_params_t* ping_params);
@@ -59,7 +60,7 @@ bool validate_option(int argc, char** argv, int* index,
 int init_socket();
 int resolve_host(const char* host, ping_params_t* ping_params);
 
-char* get_ping_message(size_t packet_size);
+char* get_ping_message(size_t packet_size, uint16_t seq);
 int icmp_ping(int sock_fd, ping_params_t* ping_params);
 
 void print_params(ping_params_t ping_params);

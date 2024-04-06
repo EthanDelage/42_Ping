@@ -9,10 +9,10 @@
 
 #include "ft_ping.h"
 
-static struct icmphdr get_icmp_header(u_char icmp_type);
+static struct icmphdr get_icmp_header(u_char icmp_type, uint16_t seq);
 static u_int16_t    get_checksum(void* data, size_t len);
 
-char* get_ping_message(size_t packet_size) {
+char* get_ping_message(size_t packet_size, uint16_t seq) {
     struct icmphdr* icmp_header;
     char* msg;
 
@@ -22,20 +22,18 @@ char* get_ping_message(size_t packet_size) {
         return NULL;
     }
     icmp_header = (struct icmphdr*) msg;
-    *icmp_header = get_icmp_header(ICMP_ECHO);
+    *icmp_header = get_icmp_header(ICMP_ECHO, seq);
     icmp_header->checksum = get_checksum(msg, sizeof(struct icmphdr) + packet_size);
     return msg;
 }
 
-static struct icmphdr get_icmp_header(u_char icmp_type) {
-    static u_int8_t seq = 0;
+static struct icmphdr get_icmp_header(u_char icmp_type, uint16_t seq) {
     struct icmphdr icmp_header;
 
     bzero(&icmp_header, sizeof(struct icmphdr));
     icmp_header.type = icmp_type;
     icmp_header.un.echo.sequence = seq;
     icmp_header.un.echo.id = getpid();
-    ++seq;
     return icmp_header;
 }
 

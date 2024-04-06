@@ -32,14 +32,13 @@ int main(int argc, char** argv) {
         close(sock_fd);
         return errno;
     }
-    close(sock_fd);
-    return 0;
     printf("PING %s (%s): %zu data bytes\n",
            ping_params.host, ping_params.ip, ping_params.packet_size);
     while (1) {
         if (icmp_ping(sock_fd, &ping_params) != 0) {
             return errno;
         }
+        ++ping_params.seq;
         sleep(1);
     }
 }
