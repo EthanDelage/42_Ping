@@ -6,6 +6,7 @@
 #include <stdbool.h>
 #include <netinet/in.h>
 #include <netinet/ip.h>
+#include <sys/time.h>
 
 #ifdef __APPLE__
 
@@ -63,6 +64,9 @@ int resolve_host(const char* host, ping_params_t* ping_params);
 char* get_ping_message(size_t packet_size, uint16_t seq);
 int icmp_ping(int sock_fd, ping_params_t* ping_params);
 
+long get_timestamp(struct timeval start_tv, struct timeval end_tv);
+
 void print_params(ping_params_t ping_params);
+void print_timestamp(long timestamp);
 
 #endif //FT_PING_H_

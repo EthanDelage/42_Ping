@@ -19,6 +19,7 @@ SRC			=		main.c	\
 					socket_initialization.c	\
 					options/validate_options.c	\
 					utils/print_params.c	\
+					utils/timestamp.c	\
 					resolve_host.c	\
 					icmp_msg.c	\
 					icmp_ping.c
