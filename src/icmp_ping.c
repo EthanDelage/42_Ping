@@ -9,6 +9,8 @@
 
 #include "ft_ping.h"
 
+extern ping_rts_t* rts_g;
+
 static ssize_t send_ping(int sock_fd, ping_params_t* ping_params,
                          struct timeval* start_tv);
 static char* receive_ping(int sock_fd, ping_params_t* ping_params,
@@ -26,6 +28,7 @@ int icmp_ping(int sock_fd, ping_params_t* ping_params) {
     if (ret > 0) {
         return -1;
     }
+    ++rts_g->n_transmitted;
     reply_packet = receive_ping(sock_fd, ping_params, &end_tv);
     if (reply_packet == NULL) {
         if (errno == EAGAIN)
@@ -35,12 +38,15 @@ int icmp_ping(int sock_fd, ping_params_t* ping_params) {
     icmp_header = (struct icmphdr*) (reply_packet + sizeof(iphdr_t));
     // TODO: remove print
     timestamp = get_timestamp(start_tv, end_tv);
+    add_timestamp(timestamp);
     printf("type: %d, code: %d, seq: %d, id: %d", icmp_header->type,
            icmp_header->code, icmp_header->un.echo.sequence,
            icmp_header->un.echo.id);
     print_timestamp(timestamp);
+    printf("\n");
     printf("ttl: %d\n", ((iphdr_t*) reply_packet)->ip_ttl);
     free(reply_packet);
+    usleep(1000000 - timestamp);
     return 0;
 }
 

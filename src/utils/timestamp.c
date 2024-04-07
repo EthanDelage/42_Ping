@@ -4,6 +4,10 @@
 #include <unistd.h>
 #include <sys/time.h>
 
+#include "ft_ping.h"
+
+extern ping_rts_t* rts_g;
+
 long get_timestamp(struct timeval start_tv, struct timeval end_tv) {
     struct timeval  timestamp_tv;
     long timestamp;
@@ -17,6 +21,21 @@ long get_timestamp(struct timeval start_tv, struct timeval end_tv) {
         timestamp = 0;
     }
     return timestamp;
+}
+
+int add_timestamp(long timestamp) {
+    if (rts_g->n_received == 0) {
+        rts_g->max_timestamp = timestamp;
+        rts_g->min_timestamp = timestamp;
+    } else if (timestamp < rts_g->min_timestamp) {
+        rts_g->min_timestamp = timestamp;
+    } else if (timestamp > rts_g->max_timestamp) {
+        rts_g->max_timestamp = timestamp;
+    }
+    rts_g->timestamp_sum += timestamp;
+    rts_g->timestamp_square_sum += (timestamp * timestamp);
+    ++rts_g->n_received;
+    return 0;
 }
 
 void print_timestamp(long timestamp) {

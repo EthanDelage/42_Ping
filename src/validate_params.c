@@ -5,6 +5,8 @@
 
 #include "ft_ping.h"
 
+extern ping_rts_t* rts_g;
+
 bool validate_params(int argc, char** argv, ping_params_t* ping_params) {
     for (int i = 1; i < argc; ++i) {
         if (argv[i][0] == '-') {
@@ -13,6 +15,7 @@ bool validate_params(int argc, char** argv, ping_params_t* ping_params) {
             }
         } else if (ping_params->host == NULL) {
             ping_params->host = argv[i];
+            rts_g->host = argv[i];
         } else {
             return false;
         }
