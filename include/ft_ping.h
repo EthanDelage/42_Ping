@@ -37,9 +37,10 @@ typedef struct iphdr iphdr_t;
 #endif
 
 #define OPTIONS_WITHOUT_ARG "vd?"
-#define OPTIONS_WITH_ARG    "c"
+#define OPTIONS_WITH_ARG    "cW"
 
-#define USAGE_MESSAGE   "usage: ./ft_ping [-dv?] [-c count] host\n"
+#define USAGE_MESSAGE   "usage: ./ft_ping [-dv?] [-c count] [-W wait_time] " \
+                        "host\n"
 #define INVALID_OPTION_MESSAGE  "ping: invalid option -- "
 #define OPTION_REQUIRES_ARG_MESSAGE "ping: option requires an argument -- "
 
@@ -58,6 +59,8 @@ typedef struct ping_params_s {
     bool    so_debug;
     bool    count;
     long    count_arg;
+    bool    linger;
+    double  linger_arg;
 } ping_params_t;
 
 // ping runtime state

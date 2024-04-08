@@ -96,6 +96,10 @@ static char* receive_ping(int sock_fd, ping_params_t* ping_params,
         }
         free(buffer);
         return NULL;
+    } else if (((struct icmphdr*) (buffer + sizeof(iphdr_t)))->un.echo.sequence
+            != ping_params->seq) {
+        free(buffer);
+        return receive_ping(sock_fd, ping_params, end_tv);
     }
     return buffer;
 }
@@ -114,12 +118,13 @@ static int validate_reply(char* reply, ping_params_t* ping_params,
     icmp_hdr->checksum = 0;
 
     if (get_checksum(icmp_hdr, sizeof(struct icmphdr)) != checksum) {
-        printf("Bad checksum for reply icmp_seq %d\n", ping_params->seq);
+        printf("Bad checksum for reply icmp_seq %d\n",
+               icmp_hdr->un.echo.sequence);
         return 1;
     }
     if (icmp_hdr->type == ICMP_ECHOREPLY) {
         printf("%zu bytes from %s: icmp_seq=%d", message_len, ping_params->ip,
-               ping_params->seq);
+               icmp_hdr->un.echo.sequence);
 #ifdef __APPLE__
         printf(" ttl=%d", ip_hdr->ip_ttl);
 #endif
@@ -131,7 +136,7 @@ static int validate_reply(char* reply, ping_params_t* ping_params,
     } else {
         if (ping_params->verbose) {
             print_bad_reply_type(ip_hdr);
-        } else {
+        } else if (ping_params->linger && ping_params->linger >= 1.) {
             printf("Bad type for reply icmp_seq %d\n", ping_params->seq);
         }
         return 1;

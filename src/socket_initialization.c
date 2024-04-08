@@ -1,6 +1,7 @@
 //  Copyright (c) 2024 Ethan Delage
 
 #include <errno.h>
+#include <math.h>
 #include <stdio.h>
 #include <string.h>
 #include <unistd.h>
@@ -21,6 +22,11 @@ int init_socket(const ping_params_t* ping_params) {
     tv.tv_sec = 1;
     tv.tv_usec = 0;
     setsockopt(sock_fd, SOL_SOCKET, SO_SNDTIMEO, &tv, sizeof(tv));
+    if (ping_params->linger) {
+        tv.tv_sec = floor(ping_params->linger_arg);
+        tv.tv_usec = ((ping_params->linger_arg - floor(ping_params->linger_arg))
+                * 1000000);
+    }
     setsockopt(sock_fd, SOL_SOCKET, SO_RCVTIMEO, &tv, sizeof(tv));
     if (ping_params->so_debug) {
         setsockopt(sock_fd, SOL_SOCKET, SO_DEBUG, &tv, sizeof(tv));

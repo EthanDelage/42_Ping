@@ -1,6 +1,8 @@
 //  Copyright (c) 2024 Ethan Delage
 
 #include <errno.h>
+#include <limits.h>
+#include <math.h>
 #include <stdio.h>
 #include <stdlib.h>
 #include <string.h>
@@ -68,6 +70,16 @@ static int set_option(char option, char* argument,
                 || ping_params->count_arg < 1) {
                 printf("ping: invalid count of packets to transmit: `%s'\n",
                        argument);
+                return -1;
+            }
+            break;
+        case 'W':
+            ping_params->linger = true;
+            ping_params->linger_arg = strtod(argument, &rest);
+            if (*rest != '\0' || errno == ERANGE
+                || isless(ping_params->linger_arg, 0)
+                || isgreater(ping_params->linger_arg, INT_MAX / 1000)) {
+                printf("ping: bad linger time: `%s'\n", argument);
                 return -1;
             }
             break;
