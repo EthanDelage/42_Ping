@@ -82,6 +82,7 @@ static ping_rts_t init_ping_rts() {
     ping_rts_t ping_rts;
 
     bzero(&ping_rts, sizeof(ping_rts_t));
+    gettimeofday(&ping_rts.start_tv, NULL);
     return ping_rts;
 }
 
@@ -94,7 +95,9 @@ static void sigint_handler(int signum) {
 static void finish(ping_rts_t* rts) {
     double timestamp_avg;
     double timestamp_stddev;
+    struct timeval end_tv;
 
+    gettimeofday(&end_tv, NULL);
     printf("\n--- %s ping statistics ---\n", rts->host);
     printf("%zu packets transmitted, ", rts->n_transmitted);
     printf("%zu received", rts->n_received);
@@ -102,7 +105,7 @@ static void finish(ping_rts_t* rts) {
         printf(", %g%% packet loss,",
                (float)(((rts->n_transmitted - rts->n_received) * 100.0)
                        / rts->n_transmitted));
-        print_timestamp(rts->timestamp_sum);
+        print_timestamp(get_timestamp(rts->start_tv, end_tv));
     }
     printf("\n");
     if (rts->n_received) {

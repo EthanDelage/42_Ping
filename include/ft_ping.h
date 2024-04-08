@@ -66,6 +66,7 @@ typedef struct ping_params_s {
 
 // ping runtime state
 typedef struct ping_rts_s {
+    struct timeval  start_tv;
     char* host;
     int sock_fd;
     size_t n_transmitted;
