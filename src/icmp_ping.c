@@ -117,9 +117,14 @@ static int validate_reply(char* reply, ping_params_t* ping_params,
         return 1;
     }
     if (icmp_hdr->type == ICMP_ECHOREPLY) {
-        printf("%zu bytes from %s: icmp_seq=%d ttl=%d",
-               message_len, ping_params->ip,
-               ping_params->seq, ip_hdr->ip_ttl);
+        printf("%zu bytes from %s: icmp_seq=%d", message_len, ping_params->ip,
+               ping_params->seq);
+#ifdef __APPLE__
+        printf(" ttl=%d", ip_hdr->ip_ttl);
+#endif
+#ifdef __linux__
+        printf(" ttl=%d", ip_hdr->ttl);
+#endif
         print_timestamp(timestamp);
         printf("\n");
     } else {
