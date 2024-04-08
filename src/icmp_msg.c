@@ -10,7 +10,6 @@
 #include "ft_ping.h"
 
 static struct icmphdr get_icmp_header(u_char icmp_type, uint16_t seq);
-static u_int16_t    get_checksum(void* data, size_t len);
 
 char* get_ping_message(size_t packet_size, uint16_t seq) {
     struct icmphdr* icmp_header;
@@ -37,7 +36,7 @@ static struct icmphdr get_icmp_header(u_char icmp_type, uint16_t seq) {
     return icmp_header;
 }
 
-static u_int16_t    get_checksum(void* data, size_t len) {
+u_int16_t    get_checksum(void* data, size_t len) {
     u_int16_t* buffer;
     u_int32_t sum;
 

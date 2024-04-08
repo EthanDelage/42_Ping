@@ -75,6 +75,7 @@ int resolve_host(const char* host, ping_params_t* ping_params);
 
 char* get_ping_message(size_t packet_size, uint16_t seq);
 int icmp_ping(int sock_fd, ping_params_t* ping_params);
+u_int16_t get_checksum(void* data, size_t len);
 
 long get_timestamp(struct timeval start_tv, struct timeval end_tv);
 int add_timestamp(long timestamp);
