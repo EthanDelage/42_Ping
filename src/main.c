@@ -44,13 +44,17 @@ int main(int argc, char** argv) {
     printf("PING %s (%s): %zu(%zu) data bytes\n",
            ping_params.host, ping_params.ip, ping_params.packet_size,
            sizeof(iphdr_t) + sizeof(struct icmphdr) + ping_params.packet_size);
-    while (1) {
+    while (ping_params.count == false || ping_params.count_arg != 0) {
         if (icmp_ping(sock_fd, &ping_params) != 0) {
             finish(&rts);
             return errno;
         }
         ++ping_params.seq;
+        if (ping_params.count) {
+            --ping_params.count_arg;
+        }
     }
+    finish(&rts);
 }
 
 static ping_params_t init_ping_params() {
@@ -70,7 +74,6 @@ static ping_rts_t init_ping_rts() {
 
 static void sigint_handler(int signum) {
     (void) signum;
-    printf("\n");
     finish(rts_g);
     exit(0);
 }
@@ -79,7 +82,7 @@ static void finish(ping_rts_t* rts) {
     double timestamp_avg;
     double timestamp_stddev;
 
-    printf("--- %s ping statistics ---\n", rts->host);
+    printf("\n--- %s ping statistics ---\n", rts->host);
     printf("%zu packets transmitted, ", rts->n_transmitted);
     printf("%zu received", rts->n_received);
     if (rts->n_transmitted) {

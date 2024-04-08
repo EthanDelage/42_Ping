@@ -1,13 +1,15 @@
 //  Copyright (c) 2024 Ethan Delage
 
-#include <unistd.h>
+#include <errno.h>
 #include <stdio.h>
+#include <stdlib.h>
 #include <string.h>
+#include <unistd.h>
 
 #include "ft_ping.h"
 
 static char* get_option_argument(int argc, char** argv, int* option_index);
-static void set_option(char option, char* argument,
+static int set_option(char option, char* argument,
                        ping_params_t* ping_params);
 
 bool validate_option(int argc, char** argv, int* index,
@@ -26,7 +28,9 @@ bool validate_option(int argc, char** argv, int* index,
                         OPTION_REQUIRES_ARG_MESSAGE, options[i]);
                 return false;
             }
-            set_option(options[i], argument, ping_params);
+            if (set_option(options[i], argument, ping_params) != 0) {
+                return false;
+            }
         } else {
             dprintf(STDERR_FILENO, "%s%c\n", INVALID_OPTION_MESSAGE, options[i]);
             return false;
@@ -43,12 +47,24 @@ static char* get_option_argument(int argc, char** argv, int* option_index) {
     return NULL;
 }
 
-static void set_option(char option, char* argument,
+static int set_option(char option, char* argument,
                        ping_params_t* ping_params) {
+    char* rest;
+
     switch (option) {
         case 'v':
             ping_params->verbose = true;
             break;
+        case 'c':
+            ping_params->count = true;
+            ping_params->count_arg = strtol(argument, &rest, 10);
+            if (*rest != '\0' || errno == ERANGE
+                || ping_params->count_arg < 1) {
+                printf("ping: invalid count of packets to transmit: `%s'\n",
+                       argument);
+                return -1;
+            }
+            break;
     }
-    (void) argument;
+    return 0;
 }

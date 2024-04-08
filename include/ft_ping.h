@@ -37,11 +37,11 @@ typedef struct iphdr iphdr_t;
 #endif
 
 #define OPTIONS_WITHOUT_ARG "v"
-#define OPTIONS_WITH_ARG    ""
+#define OPTIONS_WITH_ARG    "c"
 
-#define USAGE_MESSAGE   "usage: ./ft_ping [-v] host\n"
+#define USAGE_MESSAGE   "usage: ./ft_ping [-v] [-c count] host\n"
 #define INVALID_OPTION_MESSAGE  "ping: invalid option -- "
-#define OPTION_REQUIRES_ARG_MESSAGE "ping: option requires an argument --"
+#define OPTION_REQUIRES_ARG_MESSAGE "ping: option requires an argument -- "
 
 #define DEFAULT_PACKET_SIZE 56
 
@@ -49,9 +49,13 @@ typedef struct ping_params_s {
     char*   host;
     char*   ip;
     struct sockaddr_in sock_addr;
-    bool    verbose;
+
     size_t  packet_size;
     u_int16_t seq;
+
+    bool    verbose;
+    bool    count;
+    long    count_arg;
 } ping_params_t;
 
 // ping runtime state

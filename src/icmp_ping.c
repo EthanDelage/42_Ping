@@ -44,7 +44,9 @@ int icmp_ping(int sock_fd, ping_params_t* ping_params) {
         add_timestamp(timestamp);
     }
     free(reply_packet);
-    usleep(1000000 - timestamp);
+    if (ping_params->count == false || ping_params->count_arg != 1) {
+        usleep(1000000 - timestamp);
+    }
     return 0;
 }
 
