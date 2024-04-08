@@ -24,6 +24,7 @@ long get_timestamp(struct timeval start_tv, struct timeval end_tv) {
 }
 
 int add_timestamp(long timestamp) {
+    rts_g->last_timestamp = timestamp;
     if (rts_g->n_received == 0) {
         rts_g->max_timestamp = timestamp;
         rts_g->min_timestamp = timestamp;

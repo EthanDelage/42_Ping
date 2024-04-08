@@ -68,6 +68,7 @@ typedef struct ping_rts_s {
     size_t n_received;
     long min_timestamp;
     long max_timestamp;
+    long last_timestamp;
     double timestamp_sum;
     double timestamp_square_sum;
 } ping_rts_t;

@@ -53,6 +53,9 @@ int main(int argc, char** argv) {
             finish(&rts);
             return errno;
         }
+        if (ping_params.count == false || ping_params.count_arg != 1) {
+            usleep(1000000 - rts.last_timestamp);
+        }
         ++ping_params.seq;
         if (ping_params.count) {
             --ping_params.count_arg;

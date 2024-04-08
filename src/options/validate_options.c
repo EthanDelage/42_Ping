@@ -29,7 +29,7 @@ bool validate_option(int argc, char** argv, int* index,
                 return false;
             }
             if (set_option(options[i], argument, ping_params) != 0) {
-                return false;
+                exit(1);
             }
         } else {
             dprintf(STDERR_FILENO, "%s%c\n", INVALID_OPTION_MESSAGE, options[i]);

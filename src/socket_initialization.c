@@ -1,9 +1,9 @@
 //  Copyright (c) 2024 Ethan Delage
 
-#include <stdio.h>
-#include <unistd.h>
-#include <string.h>
 #include <errno.h>
+#include <stdio.h>
+#include <string.h>
+#include <unistd.h>
 #include <sys/socket.h>
 #include <netinet/in.h>
 
