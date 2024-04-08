@@ -5,8 +5,9 @@
 #include <stdlib.h>
 #include <string.h>
 #include <unistd.h>
-#include <sys/time.h>
+#include <arpa/inet.h>
 #include <netinet/ip_icmp.h>
+#include <sys/time.h>
 
 #include "ft_ping.h"
 
@@ -18,6 +19,7 @@ static char* receive_ping(int sock_fd, ping_params_t* ping_params,
                           struct timeval* end_tv);
 static int validate_reply(char* reply, ping_params_t* ping_params,
                           long timestamp);
+static void print_bad_reply_type(iphdr_t* ip);
 
 int icmp_ping(int sock_fd, ping_params_t* ping_params) {
     ssize_t ret;
@@ -128,8 +130,40 @@ static int validate_reply(char* reply, ping_params_t* ping_params,
         print_timestamp(timestamp);
         printf("\n");
     } else {
-        printf("Bad type for reply icmp_seq %d\n", ping_params->seq);
+        if (ping_params->verbose) {
+            print_bad_reply_type(ip_hdr);
+        } else {
+            printf("Bad type for reply icmp_seq %d\n", ping_params->seq);
+        }
         return 1;
     }
     return 0;
 }
+
+#ifdef __APPLE__
+static void print_bad_reply_type(iphdr_t* ip) {
+    printf("Vr HL TOS  Len   ID Flg  off TTL Pro  cks      Src      Dst Data\n");
+    printf(" %1x  %1x  %02x %04x %04x",
+           ip->ip_v, ip->ip_hl, ip->ip_tos, ip->ip_len, ip->ip_id);
+    printf("   %1x %04x", ((ip->ip_off) & 0xe000) >> 13,
+           (ip->ip_off) & 0x1fff);
+    printf("  %02x  %02x %04x", ip->ip_ttl, ip->ip_p, ip->ip_sum);
+    printf(" %s ", inet_ntoa(*(struct in_addr *)&ip->ip_src));
+    printf(" %s ", inet_ntoa(*(struct in_addr *)&ip->ip_dst));
+    printf("\n");
+}
+#endif
+
+#ifdef __linux__
+static void print_bad_reply_type(iphdr_t* ip) {
+    printf("Vr HL TOS  Len   ID Flg  off TTL Pro  cks      Src      Dst Data\n");
+    printf(" %1x  %1x  %02x %04x %04x",
+           ip->version, ip->ihl, ip->tos, ip->tot_len, ip->id);
+    printf("   %1x %04x", ((ip->frag_off) & 0xe000) >> 13,
+           (ip->frag_off) & 0x1fff);
+    printf("  %02x  %02x %04x", ip->ttl, ip->protocol, ip->check);
+    printf(" %s ", inet_ntoa(*(struct in_addr *)&ip->saddr));
+    printf(" %s ", inet_ntoa(*(struct in_addr *)&ip->daddr));
+    printf("\n");
+}
+#endif
