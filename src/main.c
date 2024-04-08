@@ -20,6 +20,7 @@ static void finish(ping_rts_t* rts);
 int main(int argc, char** argv) {
     static ping_rts_t rts;
     ping_params_t ping_params;
+    double interval;
     int sock_fd;
 
     rts = init_ping_rts();
@@ -53,8 +54,13 @@ int main(int argc, char** argv) {
             finish(&rts);
             return errno;
         }
-        if (ping_params.count == false || ping_params.count_arg != 1) {
-            usleep(1000000 - rts.last_timestamp);
+        interval = ping_params.interval - rts.last_timestamp / 1000000;
+        if ((ping_params.count == false || ping_params.count_arg != 1)
+            && interval > 0) {
+            if (interval > 1) {
+                sleep(floor(interval));
+            }
+            usleep((interval - floor(interval)) * 1000000);
         }
         ++ping_params.seq;
         if (ping_params.count) {

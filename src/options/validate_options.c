@@ -73,6 +73,16 @@ static int set_option(char option, char* argument,
                 return -1;
             }
             break;
+        case 'i':
+            ping_params->interval = strtod(argument, &rest);
+            if (*rest != '\0' || errno == ERANGE
+                || isless(ping_params->interval, 0)
+                || isgreater(ping_params->interval, INT_MAX / 1000)) {
+                printf("ping: bad interval time: `%s'\n", argument);
+                ping_params->interval = 1;
+                return -1;
+            }
+            break;
         case 'W':
             ping_params->linger = true;
             ping_params->linger_arg = strtod(argument, &rest);
