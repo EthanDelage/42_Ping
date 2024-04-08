@@ -55,6 +55,9 @@ static int set_option(char option, char* argument,
         case 'v':
             ping_params->verbose = true;
             break;
+        case '?':
+            ping_params->help = true;
+            break;
         case 'd':
             ping_params->so_debug = true;
             break;

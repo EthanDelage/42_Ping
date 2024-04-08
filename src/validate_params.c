@@ -20,7 +20,7 @@ bool validate_params(int argc, char** argv, ping_params_t* ping_params) {
             return false;
         }
     }
-    if (ping_params->host == NULL) {
+    if (ping_params->host == NULL && ping_params->help == false) {
         return false;
     }
     return true;

@@ -26,8 +26,12 @@ int main(int argc, char** argv) {
     rts_g = &rts;
     ping_params = init_ping_params();
     if (validate_params(argc, argv, &ping_params) == false) {
-        dprintf(STDERR_FILENO, USAGE_MESSAGE);
+        printf(USAGE_MESSAGE);
         return 1;
+    }
+    if (ping_params.help) {
+        printf(USAGE_MESSAGE);
+        return 0;
     }
     if (resolve_host(ping_params.host, &ping_params) != 0) {
         return 1;
