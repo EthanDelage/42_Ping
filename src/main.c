@@ -32,7 +32,7 @@ int main(int argc, char** argv) {
     if (resolve_host(ping_params.host, &ping_params) != 0) {
         return 1;
     }
-    sock_fd = init_socket();
+    sock_fd = init_socket(&ping_params);
     if (sock_fd < 0) {
         return errno;
     }

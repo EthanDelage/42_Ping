@@ -36,7 +36,7 @@ typedef struct iphdr iphdr_t;
 
 #endif
 
-#define OPTIONS_WITHOUT_ARG "v"
+#define OPTIONS_WITHOUT_ARG "vd"
 #define OPTIONS_WITH_ARG    "c"
 
 #define USAGE_MESSAGE   "usage: ./ft_ping [-v] [-c count] host\n"
@@ -54,6 +54,7 @@ typedef struct ping_params_s {
     u_int16_t seq;
 
     bool    verbose;
+    bool    so_debug;
     bool    count;
     long    count_arg;
 } ping_params_t;
@@ -74,7 +75,7 @@ bool validate_params(int argc, char** argv, ping_params_t* ping_params);
 bool validate_option(int argc, char** argv, int* index,
                      ping_params_t* ping_params);
 
-int init_socket();
+int init_socket(const ping_params_t* ping_params);
 int resolve_host(const char* host, ping_params_t* ping_params);
 
 char* get_ping_message(size_t packet_size, uint16_t seq);

@@ -7,7 +7,9 @@
 #include <sys/socket.h>
 #include <netinet/in.h>
 
-int init_socket() {
+#include "ft_ping.h"
+
+int init_socket(const ping_params_t* ping_params) {
     int sock_fd;
     struct timeval tv;
 
@@ -20,5 +22,8 @@ int init_socket() {
     tv.tv_usec = 0;
     setsockopt(sock_fd, SOL_SOCKET, SO_SNDTIMEO, &tv, sizeof(tv));
     setsockopt(sock_fd, SOL_SOCKET, SO_RCVTIMEO, &tv, sizeof(tv));
+    if (ping_params->so_debug) {
+        setsockopt(sock_fd, SOL_SOCKET, SO_DEBUG, &tv, sizeof(tv));
+    }
     return sock_fd;
 }

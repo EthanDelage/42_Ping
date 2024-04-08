@@ -55,6 +55,9 @@ static int set_option(char option, char* argument,
         case 'v':
             ping_params->verbose = true;
             break;
+        case 'd':
+            ping_params->so_debug = true;
+            break;
         case 'c':
             ping_params->count = true;
             ping_params->count_arg = strtol(argument, &rest, 10);
