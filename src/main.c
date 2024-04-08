@@ -41,8 +41,9 @@ int main(int argc, char** argv) {
         close(sock_fd);
         return errno;
     }
-    printf("PING %s (%s): %zu data bytes\n",
-           ping_params.host, ping_params.ip, ping_params.packet_size);
+    printf("PING %s (%s): %zu(%zu) data bytes\n",
+           ping_params.host, ping_params.ip, ping_params.packet_size,
+           sizeof(iphdr_t) + sizeof(struct icmphdr) + ping_params.packet_size);
     while (1) {
         if (icmp_ping(sock_fd, &ping_params) != 0) {
             finish(&rts);
@@ -82,9 +83,10 @@ static void finish(ping_rts_t* rts) {
     printf("%zu packets transmitted, ", rts->n_transmitted);
     printf("%zu received", rts->n_received);
     if (rts->n_transmitted) {
-        printf(", %g%% packet loss",
+        printf(", %g%% packet loss,",
                (float)(((rts->n_transmitted - rts->n_received) * 100.0)
                        / rts->n_transmitted));
+        print_timestamp(rts->timestamp_sum);
     }
     printf("\n");
     if (rts->n_received) {
