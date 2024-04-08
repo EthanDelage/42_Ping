@@ -1,6 +1,7 @@
 //  Copyright (c) 2024 Ethan Delage
 
 #include <errno.h>
+#include <math.h>
 #include <signal.h>
 #include <stdio.h>
 #include <stdlib.h>
@@ -88,9 +89,9 @@ static void finish(ping_rts_t* rts) {
     printf("\n");
     if (rts->n_received) {
         timestamp_avg = rts->timestamp_sum / rts->n_received;
-        timestamp_stddev = (rts->timestamp_square_sum / rts->n_received)
-                - (timestamp_avg * timestamp_avg);
-        printf("round-trip min/avg/max/mdev = " \
+        timestamp_stddev = sqrt((rts->timestamp_square_sum / rts->n_received)
+                - (timestamp_avg * timestamp_avg));
+        printf("round-trip min/avg/max/stddev = " \
                "%ld.%03ld/%lu.%03ld/%ld.%03ld/%ld.%03ld ms\n",
                (long)rts->min_timestamp / 1000, (long)rts->min_timestamp % 1000,
                (long)(timestamp_avg / 1000), (long)(timestamp_avg) % 1000,
