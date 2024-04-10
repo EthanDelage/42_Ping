@@ -37,10 +37,10 @@ typedef struct iphdr iphdr_t;
 #endif
 
 #define OPTIONS_WITHOUT_ARG "dv?"
-#define OPTIONS_WITH_ARG    "ciW"
+#define OPTIONS_WITH_ARG    "cisW"
 
 #define USAGE_MESSAGE   "usage: ./ft_ping [-dv?] [-c count] [-i interval] " \
-                        "[-W wait_time] host\n"
+                        "[-s packet_size] [-W wait_time] host\n"
 #define INVALID_OPTION_MESSAGE  "ping: invalid option -- "
 #define OPTION_REQUIRES_ARG_MESSAGE "ping: option requires an argument -- "
 

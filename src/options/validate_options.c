@@ -51,6 +51,7 @@ static char* get_option_argument(int argc, char** argv, int* option_index) {
 
 static int set_option(char option, char* argument,
                        ping_params_t* ping_params) {
+    unsigned long result;
     char* rest;
 
     switch (option) {
@@ -82,6 +83,15 @@ static int set_option(char option, char* argument,
                 ping_params->interval = 1;
                 return -1;
             }
+            break;
+        case 's':
+            result = strtoul(argument, &rest, 10);
+            if (*rest != '\0' || errno == ERANGE || result > UINT16_MAX) {
+                printf("ping: invalid packet size: %d < packet_size < %d",
+                       0, UINT16_MAX);
+                return -1;
+            }
+            ping_params->packet_size = (uint16_t) result;
             break;
         case 'W':
             ping_params->linger = true;
