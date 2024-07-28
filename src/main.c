@@ -57,7 +57,7 @@ int main(int argc, char** argv) {
         interval = ping_params.interval - rts.last_timestamp / 1000000;
         if ((ping_params.count == false || ping_params.count_arg != 1)
             && interval > 0) {
-            if (interval > 1) {
+            if (interval >= 1) {
                 sleep(floor(interval));
             }
             usleep((interval - floor(interval)) * 1000000);
@@ -75,6 +75,7 @@ static ping_params_t init_ping_params() {
 
     bzero(&ping_params, sizeof(ping_params_t));
     ping_params.packet_size = DEFAULT_PACKET_SIZE;
+    ping_params.interval = DEFAULT_INTERVAL;
     return ping_params;
 }
 

@@ -45,6 +45,7 @@ typedef struct iphdr iphdr_t;
 #define OPTION_REQUIRES_ARG_MESSAGE "ping: option requires an argument -- "
 
 #define DEFAULT_PACKET_SIZE 56
+#define DEFAULT_INTERVAL 1
 
 typedef struct ping_params_s {
     char*   host;
