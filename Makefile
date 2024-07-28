@@ -79,7 +79,7 @@ rerun:				re
 -include			$(DEPS)
 
 $(NAME):			$(OBJ)
-					$(CC) $(CFLAGS) $(IFLAGS) $(LFLAGS) $^ -o $@
+					$(CC) $(CFLAGS) $(IFLAGS) $^ $(LFLAGS) -o $@
 
 ##################
 #	OBJECTS FILES
