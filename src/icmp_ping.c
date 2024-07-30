@@ -76,6 +76,7 @@ static char* receive_ping(int sock_fd, ping_params_t* ping_params,
     ssize_t ret;
     ssize_t message_len;
     socklen_t addr_len;
+    struct icmphdr *icmp_hdr;
 
     message_len = sizeof(iphdr_t) + sizeof(struct icmphdr)
             + ping_params->packet_size;
@@ -96,8 +97,9 @@ static char* receive_ping(int sock_fd, ping_params_t* ping_params,
         }
         free(buffer);
         return NULL;
-    } else if (((struct icmphdr*) (buffer + sizeof(iphdr_t)))->un.echo.sequence
-            != ping_params->seq) {
+    }
+    icmp_hdr = (struct icmphdr*) (buffer + sizeof(iphdr_t));
+    if (icmp_hdr->type == ICMP_ECHO || icmp_hdr->un.echo.sequence != ping_params->seq) {
         free(buffer);
         return receive_ping(sock_fd, ping_params, end_tv);
     }
@@ -136,7 +138,8 @@ static int validate_reply(char* reply, ping_params_t* ping_params,
     } else {
         if (ping_params->verbose) {
             print_bad_reply_type(ip_hdr);
-        } else if (ping_params->linger && ping_params->linger >= 1.) {
+        } else if ((ping_params->linger && ping_params->linger >= 1.)
+                   || !ping_params->linger) {
             printf("Bad type for reply icmp_seq %d\n", ping_params->seq);
         }
         return 1;
