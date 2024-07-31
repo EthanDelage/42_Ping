@@ -31,7 +31,7 @@ static struct icmphdr get_icmp_header(u_char icmp_type, uint16_t seq) {
 
     bzero(&icmp_header, sizeof(struct icmphdr));
     icmp_header.type = icmp_type;
-    icmp_header.un.echo.sequence = seq;
+    icmp_header.un.echo.sequence = htons(seq);
     icmp_header.un.echo.id = getpid();
     return icmp_header;
 }
