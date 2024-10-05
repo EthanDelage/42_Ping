@@ -88,7 +88,7 @@ bool validate_option(int argc, char** argv, int* index,
 int init_socket(const ping_params_t* ping_params);
 int resolve_host(const char* host, ping_params_t* ping_params);
 
-char* get_ping_message(size_t packet_size, uint16_t seq);
+char* get_ping_packet(size_t packet_size, uint16_t seq);
 int icmp_ping(int sock_fd, ping_params_t* ping_params);
 u_int16_t get_checksum(void* data, size_t len);
 

@@ -54,7 +54,7 @@ static ssize_t send_ping(int sock_fd, ping_params_t* ping_params,
     ssize_t ret;
 
     message_len = sizeof(struct icmphdr) + ping_params->packet_size;
-    ping_message = get_ping_message(ping_params->packet_size, ping_params->seq);
+    ping_message = get_ping_packet(ping_params->packet_size, ping_params->seq);
     if (ping_message == NULL) {
         return -1;
     }

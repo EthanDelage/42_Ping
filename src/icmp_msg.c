@@ -11,7 +11,7 @@
 
 static struct icmphdr get_icmp_header(u_char icmp_type, uint16_t seq);
 
-char* get_ping_message(size_t packet_size, uint16_t seq) {
+char* get_ping_packet(size_t packet_size, uint16_t seq) {
     struct icmphdr* icmp_header;
     char* msg;
 

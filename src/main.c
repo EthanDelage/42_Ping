@@ -116,7 +116,13 @@ static void finish(ping_rts_t* rts) {
         timestamp_avg = rts->timestamp_sum / rts->n_received;
         timestamp_stddev = sqrt((rts->timestamp_square_sum / rts->n_received)
                 - (timestamp_avg * timestamp_avg));
-        printf("round-trip min/avg/max/stddev = " \
+        printf(
+#ifdef __linux__
+                "rtt min/avg/max/mdev = "
+#endif
+#ifdef __APPLE__
+                "round-trip min/avg/max/stddev = "
+#endif
                "%ld.%03ld/%lu.%03ld/%ld.%03ld/%ld.%03ld ms\n",
                (long)rts->min_timestamp / 1000, (long)rts->min_timestamp % 1000,
                (long)(timestamp_avg / 1000), (long)(timestamp_avg) % 1000,
