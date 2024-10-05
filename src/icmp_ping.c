@@ -126,8 +126,8 @@ static int validate_reply(char* reply, ping_params_t* ping_params,
         return 1;
     }
     if (icmp_hdr->type == ICMP_ECHOREPLY) {
-        printf("%zu bytes from %s: icmp_seq=%d", message_len, ping_params->ip,
-               ntohs(icmp_hdr->un.echo.sequence));
+        printf("%zu bytes from %s (%s): icmp_seq=%d", message_len, ping_params->fqdn,
+               ping_params->ip, ntohs(icmp_hdr->un.echo.sequence));
 #ifdef __APPLE__
         printf(" ttl=%d", ip_hdr->ip_ttl);
 #endif

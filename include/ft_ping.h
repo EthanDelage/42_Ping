@@ -4,6 +4,7 @@
 #define FT_PING_H_
 
 #include <stdbool.h>
+#include <netdb.h>
 #include <netinet/in.h>
 #include <netinet/ip.h>
 #include <sys/time.h>
@@ -49,7 +50,8 @@ typedef struct iphdr iphdr_t;
 
 typedef struct ping_params_s {
     char*   host;
-    char*   ip;
+    char    ip[INET_ADDRSTRLEN];
+    char    fqdn[NI_MAXHOST];
     struct sockaddr_in sock_addr;
 
     size_t  packet_size;
