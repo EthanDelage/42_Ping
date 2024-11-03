@@ -100,7 +100,8 @@ static char* receive_ping(int sock_fd, ping_params_t* ping_params,
     }
     icmp_hdr = (struct icmphdr*) (buffer + sizeof(iphdr_t));
     if (icmp_hdr->type == ICMP_ECHO
-        || ntohs(icmp_hdr->un.echo.sequence) != ping_params->seq) {
+        || ntohs(icmp_hdr->un.echo.sequence) != ping_params->seq
+        || icmp_hdr->un.echo.id != getpid()) {
         free(buffer);
         return receive_ping(sock_fd, ping_params, end_tv);
     }
