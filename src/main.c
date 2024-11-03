@@ -76,9 +76,7 @@ static ping_params_t init_ping_params() {
     bzero(&ping_params, sizeof(ping_params_t));
     ping_params.packet_size = DEFAULT_PACKET_SIZE;
     ping_params.interval = DEFAULT_INTERVAL;
-#if __linux__
-    ping_params.seq = 1;
-#endif
+    ping_params.id = getpid();
     return ping_params;
 }
 
