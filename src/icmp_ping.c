@@ -120,7 +120,7 @@ static int validate_reply(char* reply, ping_params_t* ping_params,
     checksum = icmp_hdr->checksum;
     icmp_hdr->checksum = 0;
 
-    if (get_checksum(icmp_hdr, sizeof(struct icmphdr)) != checksum) {
+    if (get_checksum(icmp_hdr, message_len) != checksum) {
         printf("Bad checksum for reply icmp_seq %d\n",
                ntohs(icmp_hdr->un.echo.sequence));
         return 1;
