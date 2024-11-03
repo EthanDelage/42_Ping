@@ -54,7 +54,7 @@ static ssize_t send_ping(int sock_fd, ping_params_t* ping_params,
     ssize_t ret;
 
     message_len = sizeof(struct icmphdr) + ping_params->packet_size;
-    ping_message = get_ping_packet(ping_params->packet_size, ping_params->seq);
+    ping_message = get_ping_packet(*ping_params);
     if (ping_message == NULL) {
         return -1;
     }
@@ -100,7 +100,8 @@ static char* receive_ping(int sock_fd, ping_params_t* ping_params,
     }
     icmp_hdr = (struct icmphdr*) (buffer + sizeof(iphdr_t));
     if (icmp_hdr->type == ICMP_ECHO
-        || ntohs(icmp_hdr->un.echo.sequence) != ping_params->seq) {
+        || ntohs(icmp_hdr->un.echo.sequence) != ping_params->seq
+        || icmp_hdr->un.echo.id != ping_params->id) {
         free(buffer);
         return receive_ping(sock_fd, ping_params, end_tv);
     }

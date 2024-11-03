@@ -9,30 +9,30 @@
 
 #include "ft_ping.h"
 
-static struct icmphdr get_icmp_header(u_char icmp_type, uint16_t seq);
+static struct icmphdr get_icmp_header(u_char icmp_type, uint16_t seq, u_int16_t id);
 
-char* get_ping_packet(size_t packet_size, uint16_t seq) {
+char* get_ping_packet(ping_params_t ping_params) {
     struct icmphdr* icmp_header;
     char* msg;
 
-    msg = calloc(1, sizeof(struct icmphdr) + packet_size);
+    msg = calloc(1, sizeof(struct icmphdr) + ping_params.packet_size);
     if (msg == NULL) {
         dprintf(STDERR_FILENO, "ping: %s\n", strerror(errno));
         return NULL;
     }
     icmp_header = (struct icmphdr*) msg;
-    *icmp_header = get_icmp_header(ICMP_ECHO, seq);
-    icmp_header->checksum = get_checksum(msg, sizeof(struct icmphdr) + packet_size);
+    *icmp_header = get_icmp_header(ICMP_ECHO, ping_params.seq, ping_params.id);
+    icmp_header->checksum = get_checksum(msg, sizeof(struct icmphdr) + ping_params.packet_size);
     return msg;
 }
 
-static struct icmphdr get_icmp_header(u_char icmp_type, uint16_t seq) {
+static struct icmphdr get_icmp_header(u_char icmp_type, uint16_t seq, u_int16_t id) {
     struct icmphdr icmp_header;
 
     bzero(&icmp_header, sizeof(struct icmphdr));
     icmp_header.type = icmp_type;
     icmp_header.un.echo.sequence = htons(seq);
-    icmp_header.un.echo.id = getpid();
+    icmp_header.un.echo.id = id;
     return icmp_header;
 }
 
