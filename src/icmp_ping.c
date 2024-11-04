@@ -19,7 +19,7 @@ static char* receive_ping(int sock_fd, ping_params_t* ping_params,
                           struct timeval* end_tv);
 static int validate_reply(char* reply, ping_params_t* ping_params,
                           long timestamp);
-static void print_bad_reply_type(iphdr_t* ip);
+static void print_ip_hdr(iphdr_t* ip);
 
 int icmp_ping(int sock_fd, ping_params_t* ping_params) {
     ssize_t ret;
@@ -139,7 +139,7 @@ static int validate_reply(char* reply, ping_params_t* ping_params,
         printf("\n");
     } else {
         if (ping_params->verbose) {
-            print_bad_reply_type(ip_hdr);
+            print_ip_hdr(ip_hdr);
         } else if ((ping_params->linger && ping_params->linger >= 1.)
                    || !ping_params->linger) {
             printf("Bad type for reply icmp_seq %d\n", ping_params->seq);
@@ -150,7 +150,7 @@ static int validate_reply(char* reply, ping_params_t* ping_params,
 }
 
 #ifdef __APPLE__
-static void print_bad_reply_type(iphdr_t* ip) {
+static void print_ip_hdr(iphdr_t* ip) {
     printf("Vr HL TOS  Len   ID Flg  off TTL Pro  cks      Src      Dst Data\n");
     printf(" %1x  %1x  %02x %04x %04x",
            ip->ip_v, ip->ip_hl, ip->ip_tos, ip->ip_len, ip->ip_id);
@@ -164,7 +164,15 @@ static void print_bad_reply_type(iphdr_t* ip) {
 #endif
 
 #ifdef __linux__
-static void print_bad_reply_type(iphdr_t* ip) {
+static void print_ip_hdr(iphdr_t* ip) {
+    size_t j;
+
+    printf ("IP Hdr Dump:\n ");
+    for (j = 0; j < sizeof (*ip); ++j) {
+        printf ("%02x%s", *((unsigned char *) ip + j),
+                (j % 2) ? " " : "");	/* Group bytes two by two.  */
+    }
+    printf ("\n");
     printf("Vr HL TOS  Len   ID Flg  off TTL Pro  cks      Src      Dst Data\n");
     printf(" %1x  %1x  %02x %04x %04x",
            ip->version, ip->ihl, ip->tos, ip->tot_len, ip->id);
