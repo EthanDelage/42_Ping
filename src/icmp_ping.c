@@ -140,6 +140,13 @@ static int validate_reply(char* reply, ping_params_t* ping_params,
     } else {
         if (ping_params->verbose) {
             print_ip_hdr(ip_hdr);
+            printf("ICMP: type %d, code %d, size %zu, id 0x%04x, seq 0x%04x\n",
+                   icmp_hdr->type,
+                   icmp_hdr->code,
+                   sizeof(struct icmphdr) + ping_params->packet_size,
+                   ping_params->id,
+                   ping_params->seq
+            );
         } else if ((ping_params->linger && ping_params->linger >= 1.)
                    || !ping_params->linger) {
             printf("Bad type for reply icmp_seq %d\n", ping_params->seq);
