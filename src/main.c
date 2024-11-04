@@ -46,9 +46,13 @@ int main(int argc, char** argv) {
         close(sock_fd);
         return errno;
     }
-    printf("PING %s (%s): %zu(%zu) data bytes\n",
+    printf("PING %s (%s): %zu(%zu) data bytes",
            ping_params.host, ping_params.ip, ping_params.packet_size,
            sizeof(iphdr_t) + sizeof(struct icmphdr) + ping_params.packet_size);
+    if (ping_params.verbose) {
+        printf(", id 0x%04x = %d", ping_params.id, ping_params.id);
+    }
+    printf("\n");
     while (ping_params.count == false || ping_params.count_arg != 0) {
         if (icmp_ping(sock_fd, &ping_params) != 0) {
             finish(&rts);
