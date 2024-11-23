@@ -12,7 +12,6 @@
 #define RESPONSE_OFFSET (sizeof(iphdr_t) + sizeof(struct icmphdr) + sizeof(iphdr_t))
 
 typedef struct ping_data_s {
-    char *ip;
     struct sockaddr_in sock_addr;
 
     u_char icmp_type;
