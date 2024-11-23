@@ -53,6 +53,5 @@ void resolve_host(const char *host, ping_data_t *ping_data) {
         error(EXIT_FAILURE, 0, "unknown host");
     }
     ping_data->sock_addr = *(struct sockaddr_in *)res->ai_addr;
-    ping_data->ip = inet_ntoa(ping_data->sock_addr.sin_addr);
     freeaddrinfo(res);
 }
