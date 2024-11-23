@@ -4,6 +4,5 @@ cmake-build-debug
 
 ft_ping
 
-CMakeLists.txt
 *.o
 *.d

@@ -14,15 +14,14 @@ BUILD_DIR	=		.build/
 #	FILES
 #######################
 
-SRC			=		main.c	\
-					validate_params.c	\
-					socket_initialization.c	\
-					options/validate_options.c	\
-					utils/print_params.c	\
-					utils/timestamp.c	\
-					resolve_host.c	\
-					icmp_msg.c	\
-					icmp_ping.c
+SRC			=		main.c \
+					options.c \
+					common.c \
+					rtt.c \
+					ping.c \
+					socket.c \
+					icmp.c \
+					print.c
 
 
 OBJ			=		$(addprefix $(BUILD_DIR), $(SRC:.c=.o))
@@ -71,6 +70,10 @@ re:					fclean
 .PHONY:				rerun
 rerun:				re
 					$(MAKE) run
+
+.PHONY:				format
+format:
+					find . -name "*.c" -o -name "*.h" | xargs clang-format -i
 
 ################
 #	EXECUTABLES
