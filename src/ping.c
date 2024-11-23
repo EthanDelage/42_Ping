@@ -131,12 +131,15 @@ static int process_response(ping_response_t *ping_response, ping_data_t *ping_da
         error(0, 0, "checksum mismatch from %s", inet_ntoa(ping_response->sock_addr.sin_addr));
         return -1;
     }
-    if (ping_response->type == ICMP_ECHOREPLY && ping_response->code == 0) {
-        ping_response->id = icmp_hdr->un.echo.id;
-        ping_response->seq = icmp_hdr->un.echo.sequence;
-        if (ping_response->id != ping_data->id) {
-            return -1;
-        }
+    if (ping_response->type != ICMP_ECHOREPLY) {
+        icmp_hdr = (struct icmphdr *) (ping_response->packet + sizeof(iphdr_t) + sizeof(struct icmphdr) + sizeof(iphdr_t));
+    }
+    ping_response->id = icmp_hdr->un.echo.id;
+    ping_response->seq = icmp_hdr->un.echo.sequence;
+    if (ping_response->id != ping_data->id) {
+        return -1;
+    }
+    if (ping_response->type == ICMP_ECHOREPLY) {
         ping_response->trip_time = calculate_trip_time(ping_data->last_send_tv, ping_response->receive_tv);
         update_rtt(ping_response->trip_time);
     } else if (ping_response->type == ICMP_ECHO) {
