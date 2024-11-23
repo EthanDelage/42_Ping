@@ -39,7 +39,7 @@ static char *get_icmp_description(int type, int code);
 
 void print_ping_info(const ping_data_t *ping_data) {
     printf("PING %s (%s): %zu data bytes",
-           ping_data->opt.host, ping_data->ip, ping_data->opt.packet_size);
+           ping_data->opt.host, inet_ntoa(ping_data->sock_addr.sin_addr), ping_data->opt.packet_size);
     if (ping_data->opt.verbose) {
         printf(", id 0x%04x = %d", ping_data->id, ping_data->id);
     }
@@ -174,8 +174,8 @@ static void print_ip_header(struct ip *ip) {
     printf("   %1x %04x", (ntohs(ip->ip_off) & 0xe000) >> 13,
            ntohs(ip->ip_off) & 0x1fff);
     printf("  %02x  %02x %04x", ip->ip_ttl, ip->ip_p, ntohs(ip->ip_sum));
-    printf(" %s ", inet_ntoa(*((struct in_addr *)&ip->ip_src)));
-    printf(" %s ", inet_ntoa(*((struct in_addr *)&ip->ip_dst)));
+    printf(" %s ", inet_ntoa(ip->ip_src));
+    printf(" %s ", inet_ntoa(ip->ip_dst));
     while (hlen-- > sizeof(*ip))
         printf("%02x", *cp++);
 
