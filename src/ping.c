@@ -168,6 +168,9 @@ static int ping_select_handler(int sock_fd, ping_data_t *ping_data) {
     } else if (ret > 0) {
         return 1;
     }
+    if (ping_data->opt.count != 0 && rtt_g.n_transmitted == ping_data->opt.count) {
+        exit(0);
+    }
     return 0;
 }
 
