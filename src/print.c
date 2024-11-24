@@ -105,10 +105,10 @@ void print_trip_time(long timestamp) {
 }
 
 static void print_icmp_description(const ping_response_t *ping_response, bool verbose) {
-    char host[INET_ADDRSTRLEN];
+    char host[HOST_SIZE];
     int ret;
 
-    ret = getnameinfo((struct sockaddr *)&ping_response->sock_addr, sizeof(ping_response->sock_addr), host, INET_ADDRSTRLEN, NULL, 0, 0);
+    ret = getnameinfo((struct sockaddr *)&ping_response->sock_addr, sizeof(ping_response->sock_addr), host, HOST_SIZE, NULL, 0, 0);
     printf("%zu bytes ", ping_response->packet_size - sizeof(iphdr_t));
     if (ret == 0) {
         printf("from %s (%s): ", host, inet_ntoa(ping_response->sock_addr.sin_addr));
