@@ -17,6 +17,7 @@ static struct argp_option options[] = {
         {"verbose", 'v', 0, 0, "verbose output", 0},
         {"linger", 'W', "N", 0, "number of seconds to wait for response", 0},
         {"size", 's', "NUMBER", 0, "send NUMBER data octets", 0},
+        {"ttl", OPT_TTL_KEY, "N", 0, "specify N as time-to-live", 0},
         {0}
 };
 
@@ -36,7 +37,7 @@ static error_t argp_parser(int key, char *arg, struct argp_state *state) {
 
     switch (key) {
         case 'c':
-            ping_opt->count = convert_arg_to_size_t(arg, 0);
+            ping_opt->count = convert_arg_to_size_t(arg, 0, 1);
             break;
         case 'd':
             ping_opt->debug = true;
@@ -48,10 +49,13 @@ static error_t argp_parser(int key, char *arg, struct argp_state *state) {
             ping_opt->verbose = true;
             break;
         case 'W':
-            ping_opt->linger_tv.tv_sec = (time_t) convert_arg_to_size_t(arg, INT_MAX);
+            ping_opt->linger_tv.tv_sec = (time_t) convert_arg_to_size_t(arg, INT_MAX, 1);
             break;
         case 's':
-            ping_opt->packet_size = convert_arg_to_size_t(arg, MAX_PACKET_SIZE);
+            ping_opt->packet_size = convert_arg_to_size_t(arg, MAX_PACKET_SIZE, 1);
+            break;
+        case OPT_TTL_KEY:
+            ping_opt->ttl = (int) convert_arg_to_size_t(arg, 255, 0);
             break;
         case ARGP_KEY_ARG:
             ping_opt->host = arg;

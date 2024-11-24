@@ -4,6 +4,7 @@
 #include <stdbool.h>
 #include <stdlib.h>
 
+#define OPT_TTL_KEY 256
 #define DEFAULT_INTERVAL 1.
 #define DEFAULT_LINGER_SEC 10
 #define DEFAULT_PACKET_SIZE 56
@@ -16,6 +17,7 @@ typedef struct ping_option_s {
     struct timeval linger_tv;
     struct timeval interval_tv;
     size_t packet_size;
+    int ttl;
     char *host;
 } ping_option_t;
 
