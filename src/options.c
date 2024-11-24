@@ -49,7 +49,7 @@ static error_t argp_parser(int key, char *arg, struct argp_state *state) {
             ping_opt->verbose = true;
             break;
         case 'W':
-            ping_opt->linger_tv.tv_sec = (time_t) convert_arg_to_size_t(arg, INT_MAX, 1);
+            ping_opt->linger_tv.tv_sec = (time_t) convert_arg_to_size_t(arg, INT_MAX, 0);
             break;
         case 's':
             ping_opt->packet_size = convert_arg_to_size_t(arg, MAX_PACKET_SIZE, 1);
