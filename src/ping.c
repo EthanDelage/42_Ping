@@ -27,7 +27,9 @@ void init_ping(ping_data_t *ping_data) {
     ping_data->id = getpid();
     ping_data->icmp_type = ICMP_ECHO;
     sock_fd_g = init_socket(*ping_data);
-    atexit(stop_ping);
+    if (atexit(stop_ping) == -1) {
+        error(EXIT_FAILURE, errno, "atexit");
+    }
 }
 
 void run_ping(ping_data_t *ping_data) {
