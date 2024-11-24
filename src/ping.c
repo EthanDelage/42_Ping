@@ -46,7 +46,7 @@ void run_ping(ping_data_t *ping_data) {
                 n_resp++;
             }
             free(ping_response.packet);
-        } else {
+        } else if (ping_data->opt.count == 0 || rtt_g.n_transmitted < ping_data->opt.count) {
             send_ping(sock_fd_g, ping_data);
         }
         if (ping_data->opt.count != 0 && n_resp == ping_data->opt.count) {
