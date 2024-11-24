@@ -8,7 +8,7 @@
 #define DEFAULT_INTERVAL 1.
 #define DEFAULT_LINGER_SEC 10
 #define DEFAULT_PACKET_SIZE 56
-#define MAX_PACKET_SIZE 65535
+#define MAX_PACKET_SIZE 65399
 
 typedef struct ping_option_s {
     bool verbose;
