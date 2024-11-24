@@ -58,6 +58,9 @@ static error_t argp_parser(int key, char *arg, struct argp_state *state) {
             ping_opt->ttl = (int) convert_arg_to_size_t(arg, 255, 0);
             break;
         case ARGP_KEY_ARG:
+            if (state->arg_num >= 1) {
+                argp_error(state, "too many host operands");
+            }
             ping_opt->host = arg;
             rtt_g.host = arg;
             break;
