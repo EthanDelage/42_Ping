@@ -5,16 +5,24 @@ This is a project for the 42 school which implements a simple ping utility in C.
 ## Usage
 
 ```bash
-./ft_ping [-dv?] [-c count] [-i interval] [-W wait_time] host
+Usage: ft_ping [-dv?] [-c NUMBER] [-i NUMBER] [-s NUMBER] [-W N]
+            [--count=NUMBER] [--debug] [--interval=NUMBER] [--size=NUMBER]
+            [--ttl=N] [--verbose] [--linger=N] [--help] [--usage] HOST
 ```
 
 ## Options
 
-* `-d`: Set the SO_DEBUG socket option.
-* `-v`: Produce more verbose output, giving more statistics.
-* `-c count`: Stop after sending count packets.
-* `-i interval`: Wait interval seconds between sending each packet.
-* `-W wait_time`: Time in seconds to wait for a response.
+| Short opt | Long opt            | Description                                     |
+|:---------:|---------------------|-------------------------------------------------|
+| `-c`      | `--count=NUMBER`    | stop_ping after sending NUMBER packets          |
+| `-d`      | `--debug`           | set the SO_DEBUG option                         |
+| `-i`      | `--interval=NUMBER` | wait NUMBER seconds between sending each packet |
+| `-s`      | `--size=NUMBER`     | send NUMBER data octets                         |
+|           | `--ttl=N`           | specify N as time-to-live                       |
+| `-v`      | `--verbose`         | verbose output                                  |
+| `-W`      | `--linger=N`        | number of seconds to wait for response          |
+| `-?`      | `--help`            | Give this help list                             |
+|           | `--usage`           | Give a short usage message                      |
 
 ## Description
 The ft_ping command sends ICMP ECHO_REQUEST packets to network hosts, emulating the behavior of the standard ping utility.
